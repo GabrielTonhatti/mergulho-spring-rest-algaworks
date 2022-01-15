@@ -5,6 +5,7 @@ import com.algaworks.algalog.api.model.EntregaModel;
 import com.algaworks.algalog.api.model.input.EntregaInput;
 import com.algaworks.algalog.domain.model.Entrega;
 import com.algaworks.algalog.domain.repository.EntregaRepository;
+import com.algaworks.algalog.domain.service.FinalizacaoEntregaService;
 import com.algaworks.algalog.domain.service.SolicitacaoEntregaService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class EntregaController {
 
     private EntregaAssembler entregaAssembler;
     private EntregaRepository entregaRepository;
+    private FinalizacaoEntregaService finalizacaoEntregaService;
     private SolicitacaoEntregaService solicitacaoEntregaService;
 
     @PostMapping
@@ -30,6 +32,12 @@ public class EntregaController {
         Entrega entregaSolicitada = solicitacaoEntregaService.solicitar(novaEntrega);
 
         return entregaAssembler.toModel(entregaSolicitada);
+    }
+
+    @PutMapping("/{entregaId}/finalizacao")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void finalizar(@PathVariable Long entregaId) {
+        finalizacaoEntregaService.finalizar(entregaId);
     }
 
     @GetMapping
